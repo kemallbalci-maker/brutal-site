@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYSTEM_ROOT // ADIN</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="bg-grid"></div>
+    <div class="bg-noise"></div>
+    
+    <svg id="connections"></svg>
+
+    <div class="core-container">
+        <div class="spinner"></div>
+        <div class="core-btn glitch-text" id="toggleBtn" onclick="toggleSystem()" data-text="INITIALIZE">
+            INITIALIZE<br>CORE
+        </div>
+        <div class="status-text" id="statusLabel">SYSTEM: STANDBY</div>
+    </div>
+
+    <div id="universe">
+        
+        <div class="node" onclick="openModal('HAKKIMDA', 'Merhaba, ben [Adın]. Teknolojiye tutkulu, minimalist tasarımları seven bir geliştiriciyim. <br><br>Şu anda yapay zeka ve web teknolojileri üzerine çalışıyorum.')">
+            <h3>WHOAMI</h3>
+            <span>Profil Verisi</span>
+        </div>
+
+        <div class="node" onclick="openModal('AI PROJELERİM', 'Geliştirdiğim bazı araçlar:<br>1. <b>TurkGPT:</b> Türkçe NLP modeli.<br>2. <b>VisionAPI:</b> Görüntü işleme servisi.<br>3. <b>DataScraper:</b> Veri toplama botu.')">
+            <h3>AI_TOOLS</h3>
+            <span>Python / ML</span>
+        </div>
+
+        <div class="node" onclick="openModal('BLOG', 'Son yazdığım makaleler:<br><br>- Brutalist Web Tasarımı Nedir?<br>- Yapay Zeka Etiği<br>- React vs Vue: Hangisi?')">
+            <h3>LOGS</h3>
+            <span>Makaleler</span>
+        </div>
+
+        <div class="node" onclick="window.open('https://github.com', '_blank')">
+            <h3>GITHUB</h3>
+            <span>Repo_Access ></span>
+        </div>
+
+        <div class="node" onclick="openModal('İLETİŞİM', 'Bana ulaşmak için:<br><br>Email: mail@adresi.com<br>Twitter: @kullaniciadi<br>LinkedIn: /in/profil')">
+            <h3>CONTACT</h3>
+            <span>Send_Packet</span>
+        </div>
+
+        <div class="node" onclick="openModal('DENEYLER', 'Burada kodla yaptığım görsel deneyler ve sanat çalışmaları yer alıyor. <br><br><i>[Görseller buraya eklenebilir]</i>')">
+            <h3>LABS</h3>
+            <span>Ar-Ge</span>
+        </div>
+
+    </div>
+
+    <div class="modal-overlay" id="contentModal">
+        <div class="terminal-window">
+            <div class="terminal-header">
+                <span id="modalTitle">TERMINAL_VIEW</span>
+                <button class="close-btn" onclick="closeModal()">X</button>
+            </div>
+            <div class="terminal-body" id="modalContent">
+                </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,286 @@
+/* --- 1. TEMEL AYARLAR --- */
+:root {
+    --bg-color: #0a0a0a;
+    --text-color: #e0e0e0;
+    --accent-color: #ff3c00; /* Brutalist Turuncu/Kırmızı */
+    --grid-color: rgba(255, 255, 255, 0.07);
+    --border-style: 2px solid var(--text-color);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Space Mono', monospace;
+    overflow: hidden; /* Tam ekran uygulama hissi */
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* --- 2. ARKAPLAN EFEKTLERİ --- */
+.bg-grid {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: -2;
+    background-size: 60px 60px;
+    background-image: linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+                      linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+}
+
+.bg-noise {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.06;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* --- 3. SVG ÇİZGİLERİ --- */
+#connections {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+line {
+    stroke: var(--text-color);
+    stroke-width: 1;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+/* --- 4. MERKEZ (ÇEKİRDEK) --- */
+.core-container {
+    position: absolute;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.spinner {
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    border: 1px dashed var(--text-color);
+    z-index: -1;
+    animation: spinSlow 20s linear infinite;
+}
+@keyframes spinSlow { 100% { transform: rotate(360deg); } }
+
+.core-btn {
+    width: 130px;
+    height: 130px;
+    background: #000;
+    border: var(--border-style);
+    color: var(--text-color);
+    font-weight: bold;
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    transition: all 0.2s;
+    box-shadow: 6px 6px 0 var(--accent-color);
+    position: relative;
+}
+
+.core-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 10px 10px 0 var(--accent-color);
+    background: var(--text-color);
+    color: #000;
+}
+
+.core-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 var(--accent-color);
+}
+
+.status-text {
+    margin-top: 25px;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    background: #000;
+    padding: 4px 8px;
+    border: 1px solid #333;
+}
+
+/* --- 5. NODELAR (DATA KARTLARI) --- */
+.node {
+    position: absolute;
+    width: 140px;
+    padding: 12px;
+    background: #000;
+    border: 1px solid var(--text-color);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    z-index: 10;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -50%) scale(0.5);
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.node:hover {
+    background: var(--text-color);
+    color: #000;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 15px rgba(255, 60, 0, 0.5);
+    z-index: 20;
+}
+
+.node h3 {
+    margin: 0 0 5px 0;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--accent-color);
+    width: 100%;
+    padding-bottom: 5px;
+}
+
+.node span {
+    font-size: 0.65rem;
+    opacity: 0.8;
+}
+
+/* Sistem Açıkken Node Durumu */
+body.system-active .node {
+    opacity: 1;
+    pointer-events: all;
+}
+
+body.system-active line {
+    opacity: 0.4;
+}
+
+/* --- 6. GLITCH EFEKTİ --- */
+.glitch-text { position: relative; }
+.glitch-text::before, .glitch-text::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: #000;
+    opacity: 0.8;
+}
+.glitch-text::before {
+    left: 2px;
+    text-shadow: -1px 0 #ff00c1;
+    clip: rect(44px, 450px, 56px, 0);
+    animation: glitch-anim 5s infinite linear alternate-reverse;
+}
+.glitch-text::after {
+    left: -2px;
+    text-shadow: -1px 0 #00fff9;
+    clip: rect(44px, 450px, 56px, 0);
+    animation: glitch-anim2 5s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim {
+    0% { clip: rect(12px, 9999px, 5px, 0); }
+    20% { clip: rect(80px, 9999px, 100px, 0); }
+    40% { clip: rect(40px, 9999px, 60px, 0); }
+    60% { clip: rect(10px, 9999px, 85px, 0); }
+    80% { clip: rect(50px, 9999px, 20px, 0); }
+    100% { clip: rect(30px, 9999px, 90px, 0); }
+}
+@keyframes glitch-anim2 {
+    0% { clip: rect(65px, 9999px, 100px, 0); }
+    20% { clip: rect(10px, 9999px, 80px, 0); }
+    40% { clip: rect(50px, 9999px, 30px, 0); }
+    60% { clip: rect(5px, 9999px, 60px, 0); }
+    80% { clip: rect(80px, 9999px, 10px, 0); }
+    100% { clip: rect(20px, 9999px, 50px, 0); }
+}
+
+/* --- 7. MODAL (PENCERE) --- */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85);
+    z-index: 200;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    backdrop-filter: blur(8px);
+}
+.modal-active .modal-overlay {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.terminal-window {
+    width: 90%;
+    max-width: 650px;
+    background: #0a0a0a;
+    border: 2px solid var(--text-color);
+    box-shadow: 15px 15px 0 var(--accent-color);
+    display: flex;
+    flex-direction: column;
+    transform: scale(0.9);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.modal-active .terminal-window {
+    transform: scale(1);
+}
+
+.terminal-header {
+    background: var(--text-color);
+    color: #000;
+    padding: 8px 15px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.close-btn {
+    background: var(--accent-color);
+    color: #fff;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 2px 8px;
+    font-family: inherit;
+}
+.close-btn:hover { background: #000; }
+
+.terminal-body {
+    padding: 30px;
+    color: var(--text-color);
+    max-height: 60vh;
+    overflow-y: auto;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+.terminal-body h2 {
+    margin-top: 0;
+    border-bottom: 1px dashed #333;
+    padding-bottom: 15px;
+    color: var(--accent-color);
+}
+.terminal-body p { margin-bottom: 15px; }
+
+/* Mobil Uyum */
+@media (max-width: 600px) {
+    .node { width: 100px; padding: 8px; }
+    .node h3 { font-size: 0.75rem; }
+    .core-btn { width: 100px; height: 100px; font-size: 0.75rem; }
+    .spinner { width: 120px; height: 120px; }
+}
